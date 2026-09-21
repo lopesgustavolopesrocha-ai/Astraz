@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTRAZ — Eleve seu negócio</title>
+<style>
+:root{
+  --bg:#07050b; --panel:#100b18; --panel2:#160d22; --purple:#9b4dff;
+  --purple2:#6d22c9; --text:#f7f3ff; --muted:#b7aec4; --border:rgba(168,91,255,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 50% -10%,#32105c 0,#10081a 28%,var(--bg) 60%);color:var(--text);min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:45px 45px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.loader{position:fixed;inset:0;background:#050308;display:grid;place-items:center;z-index:1000;transition:.7s ease}
+.loader.hide{opacity:0;visibility:hidden}
+.loader-inner{text-align:center}
+.loader-logo{font-size:clamp(3rem,12vw,7rem);font-weight:900;letter-spacing:.18em;text-shadow:0 0 35px rgba(155,77,255,.9);animation:pulse 1.4s infinite alternate}
+.loader-line{width:180px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),transparent);margin:22px auto}
+@keyframes pulse{from{opacity:.45;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:rgba(7,5,11,.72);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{max-width:1150px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:1.25rem;font-weight:900;letter-spacing:.16em}
+.brand span{color:var(--purple)}
+.nav-right{display:flex;gap:10px;align-items:center}
+.nav-link{color:var(--muted);font-size:.92rem;padding:10px 12px}
+.nav-link:hover{color:white}
+.cart-btn{border:1px solid var(--border);background:rgba(155,77,255,.12);color:white;border-radius:12px;padding:10px 14px;cursor:pointer;position:relative}
+.cart-count{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:var(--purple);font-size:.72rem;margin-left:5px}
+.hero{max-width:1150px;margin:auto;padding:95px 22px 75px;text-align:center}
+.badge{display:inline-block;padding:8px 13px;border:1px solid var(--border);background:rgba(155,77,255,.08);border-radius:999px;color:#d9baff;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(3.2rem,9vw,7rem);line-height:.9;margin:24px 0 22px;letter-spacing:-.06em}
+.gradient{background:linear-gradient(100deg,#fff 15%,#d9b7ff 48%,#8c3dff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:650px;margin:auto;color:var(--muted);font-size:1.08rem;line-height:1.7}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{border:0;border-radius:13px;padding:14px 21px;cursor:pointer;font-weight:800;transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,#a95cff,#7020d0);color:white;box-shadow:0 12px 35px rgba(123,38,220,.28)}
+.btn-secondary{background:#fff;color:#10091a}
+section{max-width:1150px;margin:auto;padding:65px 22px}
+.section-title{text-align:center;font-size:clamp(2rem,5vw,3.2rem);margin-bottom:12px}
+.section-sub{text-align:center;color:var(--muted);margin:0 auto 38px;max-width:650px;line-height:1.6}
+.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:linear-gradient(180deg,rgba(25,14,37,.95),rgba(11,8,16,.95));border:1px solid var(--border);border-radius:22px;padding:27px;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:460px;box-shadow:0 20px 70px rgba(0,0,0,.2)}
+.card.featured{border-color:rgba(178,105,255,.7);box-shadow:0 20px 80px rgba(113,29,194,.2)}
+.card:before{content:"";position:absolute;top:-90px;right:-90px;width:180px;height:180px;background:rgba(155,77,255,.16);filter:blur(35px);border-radius:50%}
+.ribbon{position:absolute;top:18px;right:-35px;transform:rotate(35deg);background:var(--purple);font-size:.68rem;font-weight:900;padding:6px 40px}
+.icon{font-size:2rem;margin-bottom:18px}
+.card h3{font-size:1.55rem;margin-bottom:10px}
+.desc{color:var(--muted);line-height:1.55;min-height:70px}
+.price{margin:22px 0}
+.old{text-decoration:line-through;color:#80758e;font-size:.95rem}
+.new{font-size:2.3rem;font-weight:900}
+.save{color:#b98cff;font-size:.8rem;margin-left:7px}
+.features{list-style:none;margin:0 0 25px;display:grid;gap:10px;color:#ddd4e6}
+.features li:before{content:"✓";color:#b66cff;font-weight:900;margin-right:9px}
+.card .btn{margin-top:auto;width:100%}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{padding:25px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);border-radius:18px}
+.step-num{color:#b26cff;font-weight:900;font-size:.8rem;letter-spacing:.1em}
+.step h3{margin:12px 0 8px}.step p{color:var(--muted);line-height:1.55}
+.contact{border:1px solid var(--border);background:linear-gradient(120deg,rgba(97,25,164,.18),rgba(255,255,255,.025));border-radius:25px;text-align:center;padding:55px 22px}
+footer{border-top:1px solid rgba(255,255,255,.06);padding:30px 22px;text-align:center;color:#82778e}
+.social{display:inline-flex;gap:9px;margin-top:15px;color:#d5b5ff}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(7px);z-index:100;opacity:0;visibility:hidden;transition:.25s}
+.modal-backdrop.open{opacity:1;visibility:visible}
+.cart{position:absolute;right:0;top:0;height:100%;width:min(430px,100%);background:#0c0711;border-left:1px solid var(--border);padding:25px;display:flex;flex-direction:column;transform:translateX(100%);transition:.3s}
+.modal-backdrop.open .cart{transform:translateX(0)}
+.cart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.close{background:none;border:0;color:white;font-size:1.7rem;cursor:pointer}
+.cart-items{overflow:auto;flex:1;display:grid;align-content:start;gap:12px}
+.empty{color:var(--muted);text-align:center;padding:45px 10px}
+.cart-item{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);padding:14px;border-radius:14px;display:flex;justify-content:space-between;gap:10px}
+.remove{border:0;background:none;color:#bda7cc;cursor:pointer}
+.total{border-top:1px solid rgba(255,255,255,.08);padding-top:18px;margin-top:15px}
+.total-row{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:900;margin-bottom:15px}
+.checkout{display:grid;gap:10px}
+.instagram{background:linear-gradient(135deg,#ff5bce,#8d49ff);color:white}
+@media(max-width:850px){.packages,.steps{grid-template-columns:1fr}.hero{padding-top:75px}.card{min-height:auto}.nav-link{display:none}}
+@media(max-width:430px){.hero-actions .btn{width:100%}.nav{padding:15px}.brand{font-size:1rem}}
+</style>
+</head>
+<body>
+<div class="loader" id="loader"><div class="loader-inner"><div class="loader-logo">ASTRAZ</div><div class="loader-line"></div><div style="color:#8e8199;font-size:.75rem;letter-spacing:.18em">ELEVE SEU NEGÓCIO</div></div></div>
+
+<header>
+  <nav class="nav">
+    <a class="brand" href="#">ASTRA<span>Z</span></a>
+    <div class="nav-right">
+      <a class="nav-link" href="#pacotes">Pacotes</a>
+      <a class="nav-link" href="#como">Como funciona</a>
+      <button class="cart-btn" onclick="openCart()">🛒 Carrinho <span class="cart-count" id="count">0</span></button>
+    </div>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <span class="badge">Seu negócio, em outro nível</span>
+  <h1>Deixe sua marca<br><span class="gradient">mais profissional.</span></h1>
+  <p>A ASTRAZ ajuda negócios a ganhar uma presença digital mais atrativa, organizada e profissional — com sites, templates, identidade visual e suporte.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="#pacotes">Ver pacotes</a>
+    <a class="btn btn-secondary" href="https://wa.me/5511995904409?text=Olá!%20Vim%20pelo%20site%20da%20ASTRAZ%20e%20quero%20saber%20mais." target="_blank">Falar no WhatsApp</a>
+  </div>
+</section>
+
+<section id="pacotes">
+  <h2 class="section-title">Escolha seu pacote</h2>
+  <p class="section-sub">Selecione um ou mais serviços e monte seu pedido. Os descontos já estão aplicados.</p>
+  <div class="packages">
+    <article class="card featured" data-id="master" data-name="Pacote Master" data-price="250">
+      <div class="ribbon">DESTAQUE</div><div class="icon">👑</div>
+      <h3>Pacote Master</h3>
+      <p class="desc">Para quem quer acompanhamento e uma transformação mais completa na presença digital.</p>
+      <div class="price"><div class="old">De R$ 300,00</div><span class="new">R$ 250,00</span><span class="save">- R$ 50</span></div>
+      <ul class="features"><li>Auxílio mensal</li><li>Ajuda com dúvidas e problemas</li><li>Criação de templates</li><li>Criação de site</li><li>Orientação para sua loja</li></ul>
+      <button class="btn btn-primary" onclick="addToCart('master','Pacote Master',250)">Adicionar ao carrinho</button>
+    </article>
+
+    <article class="card" data-id="plus" data-name="Pacote Plus" data-price="50">
+      <div class="icon">💜</div>
+      <h3>Pacote Plus</h3>
+      <p class="desc">Para quem quer um site próprio para divulgar produtos e deixar a loja mais profissional.</p>
+      <div class="price"><div class="old">De R$ 70,00</div><span class="new">R$ 50,00</span><span class="save">- R$ 20</span></div>
+      <ul class="features"><li>Criação de site</li><li>Divulgação de produtos</li><li>Visual profissional</li><li>Estrutura personalizada</li></ul>
+      <button class="btn btn-primary" onclick="addToCart('plus','Pacote Plus',50)">Adicionar ao carrinho</button>
+    </article>
+
+    <article class="card" data-id="comum" data-name="Pacote Comum" data-price="20">
+      <div class="icon">✨</div>
+      <h3>Pacote Comum</h3>
+      <p class="desc">Uma opção acessível para melhorar a aparência da sua loja.</p>
+      <div class="price"><div class="old">De R$ 30,00</div><span class="new">R$ 20,00</span><span class="save">- R$ 10</span></div>
+      <ul class="features"><li>Logo ou foto de perfil</li><li>Template para sua loja</li><li>Design mais atrativo</li></ul>
+      <button class="btn btn-primary" onclick="addToCart('comum','Pacote Comum',20)">Adicionar ao carrinho</button>
+    </article>
+  </div>
+</section>
+
+<section id="como">
+  <h2 class="section-title">Como funciona?</h2>
+  <p class="section-sub">Escolha o que você precisa e fale diretamente com a ASTRAZ para combinar os detalhes.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">01 / ESCOLHA</div><h3>Selecione seu pacote</h3><p>Adicione ao carrinho o serviço que mais combina com o seu negócio.</p></div>
+    <div class="step"><div class="step-num">02 / REVISE</div><h3>Confira seu pedido</h3><p>Veja os pacotes escolhidos e o valor total antes de entrar em contato.</p></div>
+    <div class="step"><div class="step-num">03 / CONTATO</div><h3>Finalize pelo seu canal</h3><p>Envie o pedido pelo WhatsApp ou fale com a ASTRAZ pelo Instagram.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="contact">
+    <h2 class="section-title">Pronto para subir de nível?</h2>
+    <p class="section-sub" style="margin-bottom:25px">Escolha seu pacote e fale comigo para começar.</p>
+    <a class="btn btn-primary" href="#pacotes">Escolher meu pacote</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>ASTRAZ</strong><br>
+  <span>Design • Sites • Templates • Suporte</span>
+  <div class="social"><a href="https://instagram.com/hihizxh" target="_blank">Instagram @hihizxh</a></div>
+</footer>
+
+<div class="modal-backdrop" id="backdrop" onclick="if(event.target===this)closeCart()">
+  <aside class="cart">
+    <div class="cart-head"><h2>Seu carrinho</h2><button class="close" onclick="closeCart()">×</button></div>
+    <div class="cart-items" id="items"></div>
+    <div class="total">
+      <div class="total-row"><span>Total</span><span id="total">R$ 0,00</span></div>
+      <div class="checkout">
+        <button class="btn btn-primary" onclick="checkoutWhatsApp()">📱 Atendimento pelo WhatsApp</button>
+        <button class="btn instagram" onclick="checkoutInstagram()">📸 Atendimento pelo Instagram</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const cart=[];
+const money=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('hide'),900));
+
+function addToCart(id,name,price){
+  if(id==='master' && cart.some(x=>x.id!=='master')){ alert('O Pacote Master já reúne os principais serviços dos outros pacotes. Remova os outros itens antes de adicionar o Master.'); return; }
+  if(id!=='master' && cart.some(x=>x.id==='master')){ alert('O Pacote Master já reúne os principais serviços. Para adicionar este pacote, remova o Master primeiro.'); return; }
+  if(cart.some(x=>x.id===id)){ alert('Esse pacote já está no carrinho.'); return; }
+  cart.push({id,name,price}); renderCart(); openCart();
+}
+function removeItem(id){const i=cart.findIndex(x=>x.id===id);if(i>-1)cart.splice(i,1);renderCart()}
+function renderCart(){
+  document.getElementById('count').textContent=cart.length;
+  const el=document.getElementById('items');
+  if(!cart.length){el.innerHTML='<div class="empty">Seu carrinho está vazio.<br>Escolha um pacote para começar.</div>';document.getElementById('total').textContent=money(0);return}
+  el.innerHTML=cart.map(x=>`<div class="cart-item"><div><strong>${x.name}</strong><div style="color:#b7aec4;margin-top:5px">${money(x.price)}</div></div><button class="remove" onclick="removeItem('${x.id}')">Remover</button></div>`).join('');
+  document.getElementById('total').textContent=money(cart.reduce((s,x)=>s+x.price,0));
+}
+function openCart(){document.getElementById('backdrop').classList.add('open');document.body.style.overflow='hidden'}
+function closeCart(){document.getElementById('backdrop').classList.remove('open');document.body.style.overflow=''}
+function orderText(){return 'Olá! Vim pelo site da ASTRAZ e quero solicitar:%0A%0A'+cart.map(x=>'• '+x.name+' — '+money(x.price)).join('%0A')+'%0A%0ATotal: '+money(cart.reduce((s,x)=>s+x.price,0))}
+function checkoutWhatsApp(){
+ if(!cart.length){alert('Adicione um pacote ao carrinho primeiro.');return}
+ window.open('https://wa.me/5511995904409?text='+orderText(),'_blank')
+}
+function checkoutInstagram(){
+ if(!cart.length){alert('Adicione um pacote ao carrinho primeiro.');return}
+ window.open('https://instagram.com/hihizxh','_blank')
+}
+renderCart();
+</script>
+</body>
+</html>
